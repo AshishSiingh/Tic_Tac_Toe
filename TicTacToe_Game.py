@@ -139,6 +139,7 @@ class TicTacToe(object):
     position = []
     address = []
     keys = []
+    anim = []
 
     def __init__(self):
         pass
@@ -147,6 +148,7 @@ class TicTacToe(object):
         if pos not in self.position:
             self.position.append(pos)
             self.keys.append(key)
+            self.anim.append(25.0)
     
     def draw(self, surface):
         color = (255, 255, 255)
@@ -155,17 +157,23 @@ class TicTacToe(object):
                 color = (0, 250, 0)
             else:
                 color = (255, 255, 255)
+            animCount = int(self.anim[pos])
             if self.keys[pos] == 0:
-                pygame.draw.circle(surface, color, (100*self.position[pos][0]+50, 100*self.position[pos][1]+50), 30, 5)
+                pygame.draw.circle(surface, color, (100*self.position[pos][0]+50, 100*self.position[pos][1]+50), 30-animCount, 5)
+                if self.anim[pos] > 0:
+                    self.anim[pos] -= 0.15
             else:
-                pygame.draw.line(surface, color, (100*self.position[pos][0]+25, 100*self.position[pos][1]+25), (100*self.position[pos][0]+75, 100*self.position[pos][1]+75), 5)
-                pygame.draw.line(surface, color, (100*self.position[pos][0]+75, 100*self.position[pos][1]+25), (100*self.position[pos][0]+25, 100*self.position[pos][1]+75), 5)
+                pygame.draw.line(surface, color, (100*self.position[pos][0]+25+animCount, 100*self.position[pos][1]+25+animCount), (100*self.position[pos][0]+75-animCount, 100*self.position[pos][1]+75-animCount), 5)
+                pygame.draw.line(surface, color, (100*self.position[pos][0]+75-animCount, 100*self.position[pos][1]+25+animCount), (100*self.position[pos][0]+25+animCount, 100*self.position[pos][1]+75-animCount), 5)
+                if self.anim[pos] > 0:
+                    self.anim[pos] -= 0.15
 
     def reset(self):
         global board
         self.position = []
         self.address = []
         self.keys = []
+        self.anim = []
 
         board = {1: ' ', 2: ' ', 3: ' ',
                  4: ' ', 5: ' ', 6: ' ',
