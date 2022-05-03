@@ -23,7 +23,7 @@ def botMove():
     for key in board.keys():
         if board[key] == ' ':
             board[key] = 'X'
-            score = minimax(board, False)
+            score = minimax(board, 0, -1000, 1000, False)
             board[key] = ' '
             if score > bestScore:
                 bestScore = score
@@ -96,11 +96,11 @@ def whoWon(key):
     else:
         return False
 
-def minimax(board, isMax):
+def minimax(board, depth, alpha, beta, isMax):
     if whoWon('X'):
-        return 1
+        return 10
     elif whoWon('O'):
-        return -1
+        return -10
     elif draw():
         return 0
 
@@ -109,20 +109,28 @@ def minimax(board, isMax):
         for key in board.keys():
             if board[key] == ' ':
                 board[key] = 'X'
-                score = minimax(board, False)
+                score = minimax(board, depth + 1, alpha, beta, False)
                 board[key] = ' '
                 if score > bestScore:
-                    bestScore = score
+                    bestScore = score - depth
+                alpha = max(alpha, bestScore)
+
+                if(beta <= alpha):
+                    break
         return bestScore
     else:
         bestScore = 1000
         for key in board.keys():
             if board[key] == ' ':
                 board[key] = 'O'
-                score = minimax(board, True)
+                score = minimax(board, depth + 1, alpha, beta, True)
                 board[key] = ' '
                 if score < bestScore:
-                    bestScore = score
+                    bestScore = score + depth
+                beta = min(beta, bestScore)
+
+                if(beta <= alpha):
+                    break
         return bestScore
 
 
@@ -275,8 +283,8 @@ def main():
         if (win() or draw()) and pygame.key.get_pressed()[pygame.K_r]:
             Game.reset()
             first = "player"
-            x = random.randrange(1, 8)
-            num = random.randrange(1, 10)
+            #x = random.randrange(1, 8)
+            num = random.randrange(1, 1000)
             if num % 2 != 0:
                 first = "bot"
 
